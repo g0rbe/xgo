@@ -2,26 +2,31 @@ package syslog
 
 import (
 	"bytes"
+	"encoding/json"
 	"errors"
 	"fmt"
+	"strconv"
 	"time"
 )
 
+const timeStampSize = 15
+
 var ErrInvalidMessageLength = errors.New("invalid mesage length")
 
+// Message is the BSD syslog message format (RFC3164)
 type Message struct {
-	Priority string
-	Date     time.Time
-	Hostname string
-	App      string
-	Msg      string
+	Priority  int       `json:"priority"`
+	Timestamp time.Time `json:"timestamp"`
+	Hostname  string    `json:"hostname"`
+	Tag       string    `json:"tag"`
+	Content   string    `json:"content"`
 }
 
 // parsePriority returns the priority string, the remaining buffer
-func parsePriority(buf []byte) (string, []byte, error) {
+func parsePriority(buf []byte) (int, []byte, error) {
 
 	if buf[0] != '<' {
-		return "", nil, fmt.Errorf("leading \"<\" is missing")
+		return 0, nil, fmt.Errorf("leading \"<\" is missing")
 	}
 
 	buf = buf[1:]
@@ -29,10 +34,14 @@ func parsePriority(buf []byte) (string, []byte, error) {
 	// Trailing ">"
 	n := bytes.IndexByte(buf, '>')
 	if n == -1 {
-		return "", nil, fmt.Errorf("trailing \">\" is missing")
+		return 0, nil, fmt.Errorf("trailing \">\" is missing")
 	}
 
-	v := string(buf[:n])
+	v, err := strconv.Atoi(string(buf[:n]))
+	if err != nil {
+		return 0, nil, fmt.Errorf("failed to parse integer: %w", err)
+	}
+
 	buf = buf[n+1:]
 
 	return v, buf, nil
@@ -41,18 +50,12 @@ func parsePriority(buf []byte) (string, []byte, error) {
 // parseTimestamp returns the date and the remaining buffer
 func parseTimestamp(buf []byte) (time.Time, []byte, error) {
 
-	// Split: "month date time ..."
-	fields := bytes.SplitN(buf, []byte{' '}, 4)
-	if len(fields) != 4 {
-		return time.Time{}, nil, fmt.Errorf("date date fields")
-	}
-
-	d, err := time.Parse(time.Stamp, string(bytes.Join(fields[:3], []byte{' '})))
+	d, err := time.Parse(time.Stamp, string(buf[:timeStampSize]))
 	if err != nil {
 		return time.Time{}, nil, fmt.Errorf("invalid date: %w", err)
 	}
 
-	return d, fields[3], nil
+	return d, buf[timeStampSize+1:], nil
 }
 
 // parseHostname returns the hostname and the remaining buffer
@@ -69,8 +72,8 @@ func parseHostname(buf []byte) (string, []byte, error) {
 	return string(v), buf, nil
 }
 
-// parseApp returns the app-name and the remaining buffer
-func parseApp(buf []byte) (string, []byte, error) {
+// parseTag returns the app-name and the remaining buffer
+func parseTag(buf []byte) (string, []byte, error) {
 
 	var v []byte
 	var found bool
@@ -84,7 +87,7 @@ func parseApp(buf []byte) (string, []byte, error) {
 		return "", nil, fmt.Errorf("missing trailing colon")
 	}
 
-	v = v[:len(v)-1]
+	v = bytes.TrimSuffix(v, []byte{':'})
 
 	return string(v), buf, nil
 }
@@ -92,7 +95,7 @@ func parseApp(buf []byte) (string, []byte, error) {
 /*
 ParseMessage parses the message in the given format:
 
-	<190>Jan _2 15:04:05 hostname app: message
+	<190>Jan _2 15:04:05 hostname tag: content
 */
 func ParseMessage(buf []byte) (*Message, error) {
 
@@ -108,7 +111,7 @@ func ParseMessage(buf []byte) (*Message, error) {
 		return nil, fmt.Errorf("invalid priority: %w", err)
 	}
 
-	msg.Date, buf, err = parseTimestamp(buf)
+	msg.Timestamp, buf, err = parseTimestamp(buf)
 	if err != nil {
 		return nil, fmt.Errorf("invalid timestamp: %w", err)
 	}
@@ -118,12 +121,22 @@ func ParseMessage(buf []byte) (*Message, error) {
 		return nil, fmt.Errorf("invalid hostname: %w", err)
 	}
 
-	msg.App, buf, err = parseApp(buf)
+	msg.Tag, buf, err = parseTag(buf)
 	if err != nil {
-		return nil, fmt.Errorf("invalid app-name: %w", err)
+		return nil, fmt.Errorf("invalid tag: %w", err)
 	}
 
-	msg.Msg = string(buf)
+	msg.Content = string(buf)
 
 	return msg, nil
+}
+
+func (m *Message) String() string {
+
+	out, err := json.Marshal(m)
+	if err != nil {
+		panic(fmt.Errorf("failed to marshal Message: %w", err))
+	}
+
+	return string(out)
 }
