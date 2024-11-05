@@ -15,7 +15,7 @@ var ErrInvalidMessageLength = errors.New("invalid mesage length")
 
 // Message is the BSD syslog message format (RFC3164)
 type Message struct {
-	Priority  int       `json:"priority"`
+	Priority  Priority  `json:"priority"`
 	Timestamp time.Time `json:"timestamp"`
 	Hostname  string    `json:"hostname"`
 	Tag       string    `json:"tag"`
@@ -23,7 +23,7 @@ type Message struct {
 }
 
 // parsePriority returns the priority string, the remaining buffer
-func parsePriority(buf []byte) (int, []byte, error) {
+func parsePriority(buf []byte) (Priority, []byte, error) {
 
 	if buf[0] != '<' {
 		return 0, nil, fmt.Errorf("leading \"<\" is missing")
@@ -44,7 +44,7 @@ func parsePriority(buf []byte) (int, []byte, error) {
 
 	buf = buf[n+1:]
 
-	return v, buf, nil
+	return Priority(v), buf, nil
 }
 
 // parseTimestamp returns the date and the remaining buffer
