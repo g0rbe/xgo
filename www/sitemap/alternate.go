@@ -58,7 +58,7 @@ func (a *Alternate) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 	}
 
 	v := struct {
-		XMLName      xml.Name `xml:"xhtml link"`
+		XMLName      xml.Name `xml:"link"`
 		Relationship string   `xml:"rel,attr"`
 		Language     string   `xml:"hreflang,attr"`
 		URL          string   `xml:"href,attr"`
