@@ -62,10 +62,10 @@ func (u URL) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 		Comment          xml.Comment `xml:",comment"`
 	}{
 		Location:         u.Location.String(),
-		LastModification: u.LastModification.String(),
-		ChangeFrequency:  u.ChangeFrequency.String(),
-		Priority:         u.Priority.String(),
-		Images:           u.Images,
+		Location:         u.Location,
+		LastModification: u.LastModification,
+		ChangeFrequency:  u.ChangeFrequency,
+		Priority:         u.Priority,
 		Alternates:       u.Alternates,
 		Comment:          xml.Comment(u.Comment),
 	}
@@ -77,14 +77,14 @@ func (u URL) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 func (u *URL) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 
 	v := struct {
-		XMLName          xml.Name         `xml:"url"`
-		Location         *Location        `xml:"loc"`
-		LastModification LastModification `xml:"lastmod,omitempty"`
-		ChangeFrequency  ChangeFrequency  `xml:"changefreq,omitempty"`
-		Priority         Priority         `xml:"priority,omitempty"`
-		Images           []Image          `xml:"image,omitempty"`
-		Alternates       []Alternate      `xml:"link,omitempty"`
-		Comment          xml.Comment      `xml:",comment"`
+		XMLName          xml.Name          `xml:"url"`
+		Location         *Location         `xml:"loc"`
+		LastModification *LastModification `xml:"lastmod,omitempty"`
+		ChangeFrequency  *ChangeFrequency  `xml:"changefreq,omitempty"`
+		Priority         *Priority         `xml:"priority,omitempty"`
+		Images           []Image           `xml:"image,omitempty"`
+		Alternates       []Alternate       `xml:"link,omitempty"`
+		Comment          xml.Comment       `xml:",comment"`
 	}{}
 
 	if err := d.DecodeElement(&v, &start); err != nil {
