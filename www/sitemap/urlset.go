@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/xml"
 	"fmt"
+	"io"
 	"sync"
 )
 
@@ -14,6 +15,20 @@ type URLSet struct {
 
 func EmptyURLSet() *URLSet {
 	return &URLSet{m: new(sync.RWMutex)}
+}
+
+func ReadURLSet(r io.Reader) (*URLSet, error) {
+
+	buf, err := io.ReadAll(r)
+	if err != nil {
+		return nil, err
+	}
+
+	s := EmptyURLSet()
+
+	err = xml.Unmarshal(buf, s)
+
+	return s, err
 }
 
 func (s *URLSet) AppendURL(u *URL) {
