@@ -8,6 +8,8 @@ import (
 	"sync"
 )
 
+const SitemapNS = "http://www.sitemaps.org/schemas/sitemap/0.9"
+
 type URLSet struct {
 	URLs []URL
 	m    *sync.RWMutex
@@ -76,21 +78,58 @@ func (s *URLSet) String() string {
 	return xml.Header + string(v)
 }
 
+// HasAlternate returns true if any URL has at least one Alternate field set.
+func (s *URLSet) HasAlternate() bool {
+
+	s.m.RLock()
+	defer s.m.RUnlock()
+
+	for i := range s.URLs {
+		if len(s.URLs[i].Alternates) > 0 {
+			return true
+		}
+	}
+
+	return false
+}
+
+// HasImage returns true if any URL has at least one Image field set.
+func (s *URLSet) HasImage() bool {
+
+	s.m.RLock()
+	defer s.m.RUnlock()
+
+	for i := range s.URLs {
+		if len(s.URLs[i].Images) > 0 {
+			return true
+		}
+	}
+
+	return false
+}
+
 // MarshalXML implements the xml.Marshaler interface.
 func (s URLSet) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 
+	s.m.RLock()
+	defer s.m.RUnlock()
+
 	start.Name.Local = "urlset"
 
+	start.Attr = append(start.Attr, xml.Attr{Name: xml.Name{Local: "xmlns"}, Value: SitemapNS})
+
+	if s.HasAlternate() {
+		start.Attr = append(start.Attr, xml.Attr{Name: xml.Name{Local: "xmlns:xhtml"}, Value: XHTMLNS})
+	}
+
+	if s.HasImage() {
+		start.Attr = append(start.Attr, xml.Attr{Name: xml.Name{Local: "xmlns:image"}, Value: ImageNS})
+	}
+
 	v := struct {
-		SitemapNS string `xml:"xmlns,attr"`
-		XHTMLAttr string `xml:"xmlns:xhtml,attr"`
-		ImageAttr string `xml:"xmlns:image,attr"`
-		URLs      []URL  `xml:"url"`
+		URLs []URL `xml:"url,omitempty"`
 	}{
-		SitemapNS: "http://www.sitemaps.org/schemas/sitemap/0.9",
-		XHTMLAttr: XHTMLNS,
-		ImageAttr: ImageNS,
-		URLs:      s.URLs,
+		URLs: s.URLs,
 	}
 
 	return e.EncodeElement(v, start)
@@ -99,8 +138,6 @@ func (s URLSet) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 // UnmarshalXML implements the xml.Unmarshaler interface.
 func (s *URLSet) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 
-	//start.Name.Local = "xhtml:link"
-
 	v := struct {
 		URLs []URL `xml:"url,omitempty"`
 	}{}
@@ -108,10 +145,6 @@ func (s *URLSet) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 	if err := d.DecodeElement(&v, &start); err != nil {
 		return err
 	}
-
-	// if u == nil {
-	// 	u = new(URL)
-	// }
 
 	s.URLs = v.URLs
 
