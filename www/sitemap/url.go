@@ -82,8 +82,8 @@ func (u *URL) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 		LastModification LastModification `xml:"lastmod,omitempty"`
 		ChangeFrequency  ChangeFrequency  `xml:"changefreq,omitempty"`
 		Priority         Priority         `xml:"priority,omitempty"`
-		Images           []Image          `xml:"image image,omitempty"`
-		Alternates       []Alternate      `xml:"xhtml link,omitempty"`
+		Images           []Image          `xml:"image,omitempty"`
+		Alternates       []Alternate      `xml:"link,omitempty"`
 		Comment          xml.Comment      `xml:",comment"`
 	}{}
 

@@ -53,7 +53,9 @@ func (a Alternate) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 //	<xhtml:link rel="alternate" hreflang="hu" href="https://example.com/hu/"></xhtml:link>
 func (a *Alternate) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 
-	//start.Name.Local = "xhtml:link"
+	if start.Name.Space == XHTMLNS {
+		start.Name.Space = "xhtml"
+	}
 
 	v := struct {
 		XMLName      xml.Name `xml:"xhtml link"`

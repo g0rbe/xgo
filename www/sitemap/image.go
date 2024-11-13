@@ -59,10 +59,14 @@ func (i Image) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 
 func (i *Image) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 
+	if start.Name.Space == ImageNS {
+		start.Name.Space = "image"
+	}
+
 	v := struct {
 		XMLName  xml.Name `xml:"image image"`
 		Location struct {
-			XMLName xml.Name `xml:"image loc"`
+			XMLName xml.Name `xml:"loc"`
 			Loc     string   `xml:",chardata"`
 		}
 	}{}
