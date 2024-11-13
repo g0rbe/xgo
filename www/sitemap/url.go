@@ -18,6 +18,7 @@ import (
 //			<!--comment1-->
 //		</url>
 type URL struct {
+	id               []byte
 	Location         *Location
 	LastModification LastModification
 	ChangeFrequency  ChangeFrequency

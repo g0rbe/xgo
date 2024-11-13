@@ -35,6 +35,15 @@ func (l *Location) String() string {
 	return (*url.URL)(l).String()
 }
 
+// SHA256 create an SHA256 sum from Location.String().
+//
+// This checksum is used as an ID of URL.
+func (l *Location) SHA256() []byte {
+
+	s := sha256.Sum256([]byte(l.String()))
+	return s[:]
+}
+
 // MarshalXML implements the xml.Marshaler interface.
 //
 // Example:
