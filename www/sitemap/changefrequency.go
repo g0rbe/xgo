@@ -6,6 +6,9 @@ import (
 	"strings"
 )
 
+// ChangeFrequency is the changefreq field of the sitemap
+//
+//	<changefreq>always</changefreq>
 type ChangeFrequency string
 
 // Valid values for ChangeFrequency

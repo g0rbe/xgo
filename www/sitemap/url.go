@@ -4,6 +4,19 @@ import (
 	"encoding/xml"
 )
 
+// URL is the <url> field of the sitemap
+//
+//		<url>
+//	    	<loc>https://example.com/</loc>
+//	    	<lastmod>0001-01-01T00:00:00Z</lastmod>
+//	    	<changefreq>daily</changefreq>
+//			<priority>1.0</priority>
+//			<image:image>
+//				<image:loc>https://example.com/cover.jpg</image:loc>
+//			</image:image>
+//			<xhtml:link rel="alternate" hreflang="https://example.hu/" href="hu"></xhtml:link>
+//			<!--comment1-->
+//		</url>
 type URL struct {
 	Location         *Location
 	LastModification LastModification
@@ -35,10 +48,6 @@ func (u *URL) AppendAlternate(href, hreflang string) {
 }
 
 // MarshalXML implements the xml.Marshaler interface.
-//
-// Example:
-//
-//	<xhtml:link rel="alternate" hreflang="hu" href="https://example.com/hu/"></xhtml:link>
 func (u URL) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 
 	start.Name.Local = "url"
@@ -65,10 +74,6 @@ func (u URL) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 }
 
 // UnmarshalXML implements the xml.Unmarshaler interface.
-//
-// Example:
-//
-//	<xhtml:link rel="alternate" hreflang="hu" href="https://example.com/hu/"></xhtml:link>
 func (u *URL) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 
 	v := struct {

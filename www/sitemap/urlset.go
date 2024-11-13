@@ -62,10 +62,6 @@ func (s *URLSet) String() string {
 }
 
 // MarshalXML implements the xml.Marshaler interface.
-//
-// Example:
-//
-//	<xhtml:link rel="alternate" hreflang="hu" href="https://example.com/hu/"></xhtml:link>
 func (s URLSet) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 
 	start.Name.Local = "urlset"
@@ -86,10 +82,6 @@ func (s URLSet) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 }
 
 // UnmarshalXML implements the xml.Unmarshaler interface.
-//
-// Example:
-//
-//	<xhtml:link rel="alternate" hreflang="hu" href="https://example.com/hu/"></xhtml:link>
 func (s *URLSet) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 
 	//start.Name.Local = "xhtml:link"

@@ -35,12 +35,12 @@ func ParseLastModification(s string) (LastModification, error) {
 
 }
 
-func (t *LastModification) String() string {
-	return (time.Time)(*t).Format(time.RFC3339Nano)
+func (t LastModification) String() string {
+	return time.Time(t).Format(time.RFC3339Nano)
 }
 
-func (t *LastModification) IsZero() bool {
-	return time.Time(*t).IsZero()
+func (t LastModification) IsZero() bool {
+	return time.Time(t).IsZero()
 }
 
 func (l LastModification) MarshalXML(e *xml.Encoder, start xml.StartElement) error {

@@ -9,6 +9,13 @@ import (
 // ImageNS is the image namespace.
 const ImageNS = "http://www.google.com/schemas/sitemap-image/1.1"
 
+// Image is the image extension of the sitemap.
+//
+//	<image:image>
+//	  <image:loc>https://example.com/picture.jpg</image:loc>
+//	</image:image>
+//
+// See: https://developers.google.com/search/docs/crawling-indexing/sitemaps/image-sitemaps
 type Image struct {
 	Location *url.URL
 }
@@ -30,6 +37,10 @@ func MustParseImageString(loc string) Image {
 	}
 
 	return Image{Location: imageLoc}
+}
+
+func (i Image) String() string {
+	return i.Location.String()
 }
 
 func (i Image) MarshalXML(e *xml.Encoder, start xml.StartElement) error {

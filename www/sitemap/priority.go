@@ -8,6 +8,8 @@ import (
 )
 
 // Priority type used for the priority field
+//
+//	<priority>1.0</priority>
 type Priority float64
 
 func (p Priority) String() string {

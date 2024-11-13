@@ -5,6 +5,9 @@ import (
 	"net/url"
 )
 
+// Location is the <loc> field of the sitemap.
+//
+//	<loc>https://example.com/sample1.html</loc>
 type Location url.URL
 
 func ParseLocation(v string) (*Location, error) {
@@ -36,7 +39,7 @@ func (l *Location) String() string {
 //
 // Example:
 //
-//	<xhtml:link rel="alternate" hreflang="hu" href="https://example.com/hu/"></xhtml:link>
+//	<loc>https://example.com/sample1.html</loc>
 func (l *Location) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 
 	start.Name.Local = "loc"
@@ -48,7 +51,7 @@ func (l *Location) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 //
 // Example:
 //
-//	<xhtml:link rel="alternate" hreflang="hu" href="https://example.com/hu/"></xhtml:link>
+//	<loc>https://example.com/sample1.html</loc>
 func (l *Location) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 
 	var v string
