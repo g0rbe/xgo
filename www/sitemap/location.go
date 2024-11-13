@@ -1,6 +1,7 @@
 package sitemap
 
 import (
+	"crypto/sha256"
 	"encoding/xml"
 	"net/url"
 )

@@ -9,7 +9,7 @@ import (
 
 type LastModification time.Time
 
-func ParseLastModification(s string) (LastModification, error) {
+func ParseLastModification(s string) (*LastModification, error) {
 
 	var layout string
 
@@ -28,22 +28,33 @@ func ParseLastModification(s string) (LastModification, error) {
 
 	v, err := time.Parse(layout, s)
 	if err != nil {
-		return LastModification{}, err
+		return nil, err
 	}
 
-	return LastModification(v), nil
-
+	return (*LastModification)(&v), nil
 }
 
-func (t LastModification) String() string {
-	return time.Time(t).Format(time.RFC3339Nano)
+func MustParseLastModification(s string) *LastModification {
+
+	v, err := ParseLastModification(s)
+	if err != nil {
+		panic(err)
+	}
+
+	return v
 }
 
-func (t LastModification) IsZero() bool {
-	return time.Time(t).IsZero()
+// String returns the RFC3339Nano formatted time of t.
+func (t *LastModification) String() string {
+
+	return time.Time(*t).Format(time.RFC3339Nano)
 }
 
-func (l LastModification) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
+func (t *LastModification) IsZero() bool {
+	return time.Time(*t).IsZero()
+}
+
+func (l *LastModification) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 
 	start.Name.Local = "lastmod"
 
@@ -65,7 +76,7 @@ func (t *LastModification) UnmarshalXML(d *xml.Decoder, start xml.StartElement) 
 		return err
 	}
 
-	*t = v
+	*t = *v
 
 	return err
 }

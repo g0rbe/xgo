@@ -53,8 +53,8 @@ func (a Alternate) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 //	<xhtml:link rel="alternate" hreflang="hu" href="https://example.com/hu/"></xhtml:link>
 func (a *Alternate) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 
-	if start.Name.Space == XHTMLNS {
-		start.Name.Space = "xhtml"
+	if start.Name.Space != XHTMLNS && start.Name.Space != "xhtml" {
+		return fmt.Errorf("invalid name space: %s", start.Name.Space)
 	}
 
 	v := struct {

@@ -24,34 +24,34 @@ var (
 
 // ParseChangeFrequency parses ChangeFrequency from v.
 //
-// If v is not a valid ChangeFrequency, returns an empty string("")
-func ParseChangeFrequency(v string) ChangeFrequency {
+// If v is not a valid ChangeFrequency, returns nil
+func ParseChangeFrequency(v string) *ChangeFrequency {
 
 	switch v {
 	case "always":
-		return ChangeFreqAlways
+		return &ChangeFreqAlways
 	case "hourly":
-		return ChangeFreqHourly
+		return &ChangeFreqHourly
 	case "daily":
-		return ChangeFreqDaily
+		return &ChangeFreqDaily
 	case "weekly":
-		return ChangeFreqWeekly
+		return &ChangeFreqWeekly
 	case "monthly":
-		return ChangeFreqMonthly
+		return &ChangeFreqMonthly
 	case "yearly":
-		return ChangeFreqYearly
+		return &ChangeFreqYearly
 	case "never":
-		return ChangeFreqNever
+		return &ChangeFreqNever
 	default:
-		return ""
+		return nil
 	}
 }
 
-func (f ChangeFrequency) String() string {
-	return string(f)
+func (f *ChangeFrequency) String() string {
+	return string(*f)
 }
 
-func (f ChangeFrequency) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
+func (f *ChangeFrequency) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 
 	start.Name.Local = "changefreq"
 
@@ -68,15 +68,19 @@ func (f *ChangeFrequency) UnmarshalXML(d *xml.Decoder, start xml.StartElement) e
 		return fmt.Errorf("failed to decode ChangeFrequency: %w", err)
 	}
 
+	if v == "" {
+		return fmt.Errorf("empty value for changefreq")
+	}
+
 	v = strings.TrimSpace(v)
 
 	c := ParseChangeFrequency(v)
 
-	if c == "" {
+	if c == nil {
 		return fmt.Errorf("invalid value for changefreq: %s", c)
 	}
 
-	*f = c
+	*f = *c
 
 	return nil
 }

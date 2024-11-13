@@ -112,7 +112,7 @@ func TestChangeFrequency(t *testing.T) {
 
 	changefreq1 := sitemap.ParseChangeFrequency("always")
 
-	if changefreq1 == "" {
+	if *changefreq1 == "" {
 		t.Fatalf("Failed to parse\n")
 	}
 
@@ -130,8 +130,8 @@ func TestChangeFrequency(t *testing.T) {
 		t.Fatalf("Failed to unmarshal: %s\n", err)
 	}
 
-	if *changefreq2 != changefreq1 {
-		t.Fatalf("FAIL: invalid lastmod: %#v\n", *changefreq2)
+	if *changefreq2 != *changefreq1 {
+		t.Fatalf("FAIL: invalid changefreq: %#v\n", *changefreq2)
 	}
 }
 
@@ -154,19 +154,20 @@ func TestPriority(t *testing.T) {
 	}
 
 	if prio2 != prio1 {
-		t.Fatalf("FAIL: invalid prio2: %s\n", prio2)
+		t.Fatalf("FAIL: invalid prio2: %s\n", &prio2)
 	}
 }
 
 func TestURL(t *testing.T) {
 
 	url1 := sitemap.URL{
-		Location:        sitemap.MustParseLocation("https://example.com/"),
-		ChangeFrequency: sitemap.ParseChangeFrequency("daily"),
-		Priority:        sitemap.Priority(1.0),
-		Images:          []sitemap.Image{sitemap.MustParseImageString("https://example.com/cover.jpg")},
-		Alternates:      []sitemap.Alternate{sitemap.NewAlternate("https://example.hu/", "hu")},
-		Comment:         "comment1",
+		Location:         sitemap.MustParseLocation("https://example.com/"),
+		ChangeFrequency:  sitemap.ParseChangeFrequency("daily"),
+		Priority:         sitemap.MustParsePriority("1.0"),
+		LastModification: sitemap.MustParseLastModification("2006-01-02T15:04:05.999999999+07:00"),
+		Images:           []sitemap.Image{sitemap.MustParseImageString("https://example.com/cover.jpg")},
+		Alternates:       []sitemap.Alternate{sitemap.NewAlternate("https://example.hu/", "hu")},
+		Comment:          "comment1",
 	}
 
 	v1, err := xml.MarshalIndent(url1, "    ", "    ")
@@ -194,12 +195,16 @@ func TestURL(t *testing.T) {
 		t.Fatalf("Invalid Location: %s\n", url2.Location)
 	}
 
-	if url2.ChangeFrequency != url1.ChangeFrequency {
-		t.Fatalf("Invalid ChangeFrequency: %s\n", url2.ChangeFrequency)
+	if *url2.ChangeFrequency != *url1.ChangeFrequency {
+		t.Fatalf("Invalid ChangeFrequency: %s\n", *url2.ChangeFrequency)
 	}
 
-	if url2.Priority != url1.Priority {
+	if *url2.Priority != *url1.Priority {
 		t.Fatalf("Invalid Priority: %s\n", url2.Priority)
+	}
+
+	if url2.LastModification.String() != url1.LastModification.String() {
+		t.Fatalf("Invalid LastModification: %s\n", url2.LastModification)
 	}
 
 	if url2.Comment != url1.Comment {
@@ -212,19 +217,21 @@ func TestURLSet(t *testing.T) {
 	urls := sitemap.EmptyURLSet()
 
 	urls.AppendURL(&sitemap.URL{
-		Location:        sitemap.MustParseLocation("https://example.com/"),
-		ChangeFrequency: sitemap.ParseChangeFrequency("daily"),
-		Priority:        sitemap.Priority(1.0),
-		Images:          []sitemap.Image{sitemap.MustParseImageString("https://example.com/cover.jpg")},
-		Alternates:      []sitemap.Alternate{sitemap.NewAlternate("https://example.hu/", "hu")},
+		Location:         sitemap.MustParseLocation("https://example.com/"),
+		ChangeFrequency:  sitemap.ParseChangeFrequency("daily"),
+		Priority:         sitemap.MustParsePriority("1.0"),
+		LastModification: sitemap.MustParseLastModification("2006-01-02T15:04:05.999999999+07:00"),
+		Images:           []sitemap.Image{sitemap.MustParseImageString("https://example.com/cover.jpg")},
+		Alternates:       []sitemap.Alternate{sitemap.NewAlternate("https://example.hu/", "hu")},
 	})
 
 	urls.AppendURL(&sitemap.URL{
-		Location:        sitemap.MustParseLocation("https://example.com/"),
-		ChangeFrequency: sitemap.ParseChangeFrequency("daily"),
-		Priority:        sitemap.Priority(1.0),
-		Images:          []sitemap.Image{sitemap.MustParseImageString("https://example.com/cover.jpg")},
-		Alternates:      []sitemap.Alternate{sitemap.NewAlternate("https://example.hu/", "hu")},
+		Location:         sitemap.MustParseLocation("https://example.com/"),
+		ChangeFrequency:  sitemap.ParseChangeFrequency("daily"),
+		Priority:         sitemap.MustParsePriority("1.0"),
+		LastModification: sitemap.MustParseLastModification("2006-01-02T15:04:05.999999999+07:00"),
+		Images:           []sitemap.Image{sitemap.MustParseImageString("https://example.com/cover.jpg")},
+		Alternates:       []sitemap.Alternate{sitemap.NewAlternate("https://example.hu/", "hu")},
 	})
 
 	t.Logf("\n%s\n\n", urls)
