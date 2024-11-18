@@ -71,7 +71,7 @@ func (p *Priority) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 		return fmt.Errorf("failed to parse priority: %w", err)
 	}
 
-	*p = (Priority)(*prio)
+	*p = *prio
 
 	return nil
 }
