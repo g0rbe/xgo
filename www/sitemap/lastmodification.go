@@ -44,10 +44,13 @@ func MustParseLastModification(s string) *LastModification {
 	return v
 }
 
+func (t *LastModification) Format(layout string) string {
+	return time.Time(*t).Format(layout)
+}
+
 // String returns the RFC3339Nano formatted time of t.
 func (t *LastModification) String() string {
-
-	return time.Time(*t).Format(time.RFC3339Nano)
+	return t.Format(time.RFC3339Nano)
 }
 
 func (t *LastModification) IsZero() bool {
