@@ -74,9 +74,7 @@ func (f *ChangeFrequency) UnmarshalXML(d *xml.Decoder, start xml.StartElement) e
 		return fmt.Errorf("empty value for changefreq")
 	}
 
-	v = strings.TrimSpace(v)
-
-	c := ParseChangeFrequency(v)
+	c := ParseChangeFrequency(strings.TrimSpace(v))
 
 	if c == nil {
 		return fmt.Errorf("invalid value for changefreq: %s", c)
