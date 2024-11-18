@@ -9,6 +9,11 @@ import (
 
 type LastModification time.Time
 
+func LastModificationNow() *LastModification {
+	v := time.Now()
+	return (*LastModification)(&v)
+}
+
 func ParseLastModification(s string) (*LastModification, error) {
 
 	var layout string
