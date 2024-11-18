@@ -1,9 +1,10 @@
 package sitemap
 
 import (
-	"crypto/sha256"
 	"encoding/xml"
 	"net/url"
+
+	"github.com/g0rbe/xgo/cryptography/checksum"
 )
 
 // Location is the <loc> field of the sitemap.
@@ -41,8 +42,7 @@ func (l *Location) String() string {
 // This checksum is used as an ID of URL.
 func (l *Location) SHA256() []byte {
 
-	s := sha256.Sum256([]byte(l.String()))
-	return s[:]
+	return checksum.Data256([]byte(l.String())).Bytes()
 }
 
 // MarshalXML implements the xml.Marshaler interface.
