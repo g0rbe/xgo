@@ -53,7 +53,9 @@ func (f *ChangeFrequency) String() string {
 
 func (f *ChangeFrequency) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 
+	if start.Name.Local != "changefreq" {
 		start.Name.Local = "changefreq"
+	}
 
 	return e.EncodeElement(f.String(), start)
 }

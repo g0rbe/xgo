@@ -57,7 +57,8 @@ func (t *LastModification) IsZero() bool {
 func (l *LastModification) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 
 	if start.Name.Local != "lastmod" {
-	start.Name.Local = "lastmod"
+		start.Name.Local = "lastmod"
+	}
 
 	return e.EncodeElement(l.String(), start)
 }

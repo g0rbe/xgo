@@ -114,7 +114,9 @@ func (s URLSet) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 	s.m.RLock()
 	defer s.m.RUnlock()
 
-	start.Name.Local = "urlset"
+	if start.Name.Local != "urlset" {
+		start.Name.Local = "urlset"
+	}
 
 	start.Attr = append(start.Attr, xml.Attr{Name: xml.Name{Local: "xmlns"}, Value: SitemapNS})
 
