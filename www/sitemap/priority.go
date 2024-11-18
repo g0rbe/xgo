@@ -49,7 +49,7 @@ func (p *Priority) IsEmpty() bool {
 
 func (p Priority) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 
-	start.Name.Local = "priority"
+		start.Name.Local = "priority"
 
 	return e.EncodeElement(p.String(), start)
 }

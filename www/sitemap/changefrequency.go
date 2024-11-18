@@ -53,7 +53,7 @@ func (f *ChangeFrequency) String() string {
 
 func (f *ChangeFrequency) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 
-	start.Name.Local = "changefreq"
+		start.Name.Local = "changefreq"
 
 	return e.EncodeElement(f.String(), start)
 }
@@ -72,7 +72,9 @@ func (f *ChangeFrequency) UnmarshalXML(d *xml.Decoder, start xml.StartElement) e
 		return fmt.Errorf("empty value for changefreq")
 	}
 
-	c := ParseChangeFrequency(strings.TrimSpace(v))
+	v = strings.TrimSpace(v)
+
+	c := ParseChangeFrequency(v)
 
 	if c == nil {
 		return fmt.Errorf("invalid value for changefreq: %s", c)
