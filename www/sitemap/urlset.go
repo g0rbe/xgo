@@ -120,10 +120,12 @@ func (s URLSet) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 
 	start.Attr = append(start.Attr, xml.Attr{Name: xml.Name{Local: "xmlns"}, Value: SitemapNS})
 
+	// Append XHTML namespace only if any alternate exists
 	if s.HasAlternate() {
 		start.Attr = append(start.Attr, xml.Attr{Name: xml.Name{Local: "xmlns:xhtml"}, Value: XHTMLNS})
 	}
 
+	// Append image namespace only if any mage exists
 	if s.HasImage() {
 		start.Attr = append(start.Attr, xml.Attr{Name: xml.Name{Local: "xmlns:image"}, Value: ImageNS})
 	}
