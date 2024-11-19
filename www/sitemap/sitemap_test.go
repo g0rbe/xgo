@@ -167,7 +167,7 @@ func TestURL(t *testing.T) {
 		LastModification: sitemap.MustParseLastModification("2006-01-02T15:04:05.999999999+07:00"),
 		Images:           []sitemap.Image{sitemap.MustParseImageString("https://example.com/cover.jpg")},
 		Alternates:       []sitemap.Alternate{sitemap.NewAlternate("https://example.hu/", "hu")},
-		Comment:          "comment1",
+		Comment:          sitemap.NewComment([]byte("comment1")),
 	}
 
 	v1, err := xml.MarshalIndent(url1, "    ", "    ")
@@ -191,7 +191,7 @@ func TestURL(t *testing.T) {
 
 	t.Logf("\n%s\n", v2)
 
-	if url2.Location.String() != url1.Location.String() {
+	if *url2.Location != *url1.Location {
 		t.Fatalf("Invalid Location: %s\n", url2.Location)
 	}
 
@@ -207,7 +207,7 @@ func TestURL(t *testing.T) {
 		t.Fatalf("Invalid LastModification: %s\n", url2.LastModification)
 	}
 
-	if url2.Comment != url1.Comment {
+	if url2.Comment.String() != url1.Comment.String() {
 		t.Fatalf("Invalid Comment: %s\n", url2.Comment)
 	}
 }
