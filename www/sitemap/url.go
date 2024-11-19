@@ -25,7 +25,7 @@ type URL struct {
 	Priority         *Priority
 	Images           []Image
 	Alternates       []Alternate
-	Comment          string
+	Comment          Comment
 }
 
 func EmptyURL() *URL {
