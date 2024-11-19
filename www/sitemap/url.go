@@ -93,7 +93,7 @@ func (u *URL) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 	u.Priority = v.Priority
 	u.Images = v.Images
 	u.Alternates = v.Alternates
-	u.Comment = string(v.Comment)
+	u.Comment = Comment(v.Comment)
 
 	return nil
 }
