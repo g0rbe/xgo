@@ -167,7 +167,7 @@ func TestURL(t *testing.T) {
 		LastModification: sitemap.MustParseLastModification("2006-01-02T15:04:05.999999999+07:00"),
 		Images:           []sitemap.Image{sitemap.MustParseImageString("https://example.com/cover.jpg")},
 		Alternates:       []sitemap.Alternate{sitemap.NewAlternate("https://example.hu/", "hu")},
-		Comment:          sitemap.NewComment([]byte("comment1")),
+		Comment:          sitemap.NewComment("comment1"),
 	}
 
 	v1, err := xml.MarshalIndent(url1, "    ", "    ")
