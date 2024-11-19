@@ -2,6 +2,7 @@ package sitemap
 
 import (
 	"encoding/xml"
+	"net/url"
 )
 
 // URL is the <url> field of the sitemap
@@ -30,6 +31,16 @@ type URL struct {
 
 func EmptyURL() *URL {
 	return new(URL)
+}
+
+func (u *URL) AddLocationURL(l *url.URL) {
+
+	if l == nil {
+		return
+	}
+
+	u.Location = (*Location)(l)
+	u.id = u.Location.SHA256()
 }
 
 func (u *URL) AppendAlternate(href, hreflang string) {
