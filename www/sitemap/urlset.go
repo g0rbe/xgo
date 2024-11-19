@@ -39,7 +39,7 @@ func (s *URLSet) AppendURL(u *URL) {
 	defer s.m.Unlock()
 
 	for i := range s.URLs {
-		if s.URLs[i].Location == u.Location {
+		if *s.URLs[i].Location == *u.Location {
 			return
 		}
 	}
