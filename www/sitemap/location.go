@@ -3,6 +3,7 @@ package sitemap
 import (
 	"encoding/xml"
 	"net/url"
+	"strings"
 
 	"github.com/g0rbe/xgo/cryptography/checksum"
 )
@@ -35,6 +36,10 @@ func MustParseLocation(v string) *Location {
 func (l *Location) String() string {
 	// Convert to *url.URL type
 	return (*url.URL)(l).String()
+}
+
+func (a Location) Compare(b Location) int {
+	return strings.Compare(a.String(), b.String())
 }
 
 // SHA256 create an SHA256 sum from Location.String().
