@@ -65,6 +65,17 @@ func (s *URLSet) ToXML() ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
+// SortByLocation sorts the URLs by Location string.
+func (s *URLSet) SortByLocation() {
+
+	s.m.Lock()
+	defer s.m.Unlock()
+
+	sort.Slice(s.URLs, func(i, j int) bool {
+		return s.URLs[i].Location.String() < s.URLs[j].Location.String()
+	})
+}
+
 func (s *URLSet) String() string {
 
 	s.m.RLock()
