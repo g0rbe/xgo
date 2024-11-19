@@ -8,7 +8,7 @@ import (
 
 type Comment xml.Comment
 
-func NewComment(v []byte) Comment {
+func NewComment(v string) Comment {
 	if len(v) == 0 {
 		return nil
 	}
@@ -43,7 +43,7 @@ func (c *Comment) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 		return fmt.Errorf("failed to decode Comment: %w", err)
 	}
 
-	*c = NewComment(v)
+	*c = Comment(v)
 
 	return nil
 }
