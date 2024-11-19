@@ -19,6 +19,17 @@ func EmptyURLSet() *URLSet {
 	return &URLSet{m: new(sync.RWMutex)}
 }
 
+func FetchURLSet(u string) (*URLSet, error) {
+
+	resp, err := http.Get(u)
+	if err != nil {
+		return nil, fmt.Errorf("HTTP Get error: %w", err)
+	}
+	defer resp.Body.Close()
+
+	return ReadURLSet(resp.Body)
+}
+
 func ReadURLSet(r io.Reader) (*URLSet, error) {
 
 	buf, err := io.ReadAll(r)
