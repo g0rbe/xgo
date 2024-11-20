@@ -78,6 +78,21 @@ func (s *URLSet) ToXML() ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
+func (s *URLSet) ToTXT() ([]byte, error) {
+
+	s.m.RLock()
+	defer s.m.RUnlock()
+
+	buf := new(bytes.Buffer)
+
+	for i := range s.URLs {
+		buf.WriteString(s.URLs[i].Location.String())
+		buf.WriteByte('\n')
+	}
+
+	return buf.Bytes(), nil
+}
+
 // SortByLocation sorts the URLs by Location string.
 func (s *URLSet) SortByLocation() {
 
