@@ -46,14 +46,17 @@ func ReadURLSet(r io.Reader) (*URLSet, error) {
 	return s, err
 }
 
-func (s *URLSet) AppendURL(u *URL) {
+// AppendURL appends *URL u to the URLSet if the Location is unique.
+//
+// Returns false if URL.Location is not unique.
+func (s *URLSet) AppendURL(u *URL) bool {
 
 	s.m.Lock()
 	defer s.m.Unlock()
 
 	for i := range s.URLs {
-		if *s.URLs[i].Location == *u.Location {
-			return
+		if s.URLs[i].Location.String() == u.Location.String() {
+			return false
 		}
 	}
 
