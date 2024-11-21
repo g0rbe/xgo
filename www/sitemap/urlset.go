@@ -62,6 +62,12 @@ func (s *URLSet) AppendURL(u *URL) bool {
 
 	s.URLs = append(s.URLs, *u)
 
+	return true
+}
+
+// Size returns the number of URLs in the URLSet s.
+func (s *URLSet) Size() int {
+	return len(s.URLs)
 }
 
 func (s *URLSet) ToXML() ([]byte, error) {
