@@ -214,7 +214,7 @@ func TestURL(t *testing.T) {
 
 func TestURLSet(t *testing.T) {
 
-	urls := sitemap.EmptyURLSet()
+	urls := sitemap.NewURLSet()
 
 	urls.AppendURL(&sitemap.URL{
 		Location:         sitemap.MustParseLocation("https://example.com/"),
