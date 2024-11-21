@@ -19,7 +19,6 @@ import (
 //			<!--comment1-->
 //		</url>
 type URL struct {
-	id               []byte
 	Location         *Location
 	LastModification *LastModification
 	ChangeFrequency  *ChangeFrequency
@@ -29,7 +28,7 @@ type URL struct {
 	Comment          Comment
 }
 
-func NewURL() *URL {
+func EmptyURL() *URL {
 	return new(URL)
 }
 
@@ -97,8 +96,6 @@ func (u *URL) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 	if err := d.DecodeElement(&v, &start); err != nil {
 		return err
 	}
-
-	u.id = v.Location.SHA256()
 
 	u.Location = v.Location
 	u.LastModification = v.LastModification
