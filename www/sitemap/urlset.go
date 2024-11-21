@@ -17,7 +17,7 @@ type URLSet struct {
 	m    *sync.RWMutex
 }
 
-func EmptyURLSet() *URLSet {
+func NewURLSet() *URLSet {
 	return &URLSet{m: new(sync.RWMutex)}
 }
 
@@ -39,7 +39,7 @@ func ReadURLSet(r io.Reader) (*URLSet, error) {
 		return nil, err
 	}
 
-	s := EmptyURLSet()
+	s := NewURLSet()
 
 	err = xml.Unmarshal(buf, s)
 
