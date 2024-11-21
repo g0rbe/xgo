@@ -2,7 +2,7 @@ package sitemap
 
 import (
 	"encoding/xml"
-	"net/url"
+	"fmt"
 )
 
 // URL is the <url> field of the sitemap
@@ -28,18 +28,29 @@ type URL struct {
 	Comment          Comment
 }
 
-func EmptyURL() *URL {
+func NewURL() *URL {
 	return new(URL)
 }
 
-func (u *URL) AddLocationURL(l *url.URL) {
+// AddLocation parses and adds the Location loc.
+func (u *URL) AddLocation(loc string) error {
 
-	if l == nil {
-		return
+	if u.Location != nil {
+		return fmt.Errorf("Location is not empty")
 	}
 
-	u.Location = (*Location)(l)
-	u.id = u.Location.SHA256()
+	if len(loc) == 0 {
+		return fmt.Errorf("empty location")
+	}
+
+	parsedLoc, err := ParseLocation(loc)
+	if err != nil {
+		return err
+	}
+
+	u.Location = parsedLoc
+
+	return nil
 }
 
 func (u *URL) AppendAlternate(href, hreflang string) {
