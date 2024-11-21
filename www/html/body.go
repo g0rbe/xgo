@@ -61,3 +61,13 @@ func (b *Body) SHA256() checksum.SHA256 {
 
 	return checksum.Data256(v)
 }
+
+func (b *Body) RemoveSelection(selector string) {
+	b.s.Find(selector).Remove()
+}
+
+func (b *Body) RemoveSelections(selectors []string) {
+	for i := range selectors {
+		b.s.Find(selectors[i]).Remove()
+	}
+}
