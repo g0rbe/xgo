@@ -54,7 +54,9 @@ func (u *URL) AppendAlternate(href, hreflang string) {
 // MarshalXML implements the xml.Marshaler interface.
 func (u URL) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 
-	start.Name.Local = "url"
+	if start.Name.Local != "url" {
+		start.Name.Local = "url"
+	}
 
 	v := struct {
 		XMLName          xml.Name          `xml:"url"`
