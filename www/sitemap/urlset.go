@@ -67,6 +67,10 @@ func (s *URLSet) AppendURL(u *URL) bool {
 
 // Size returns the number of URLs in the URLSet s.
 func (s *URLSet) Size() int {
+
+	s.m.RLock()
+	defer s.m.RUnlock()
+
 	return len(s.URLs)
 }
 
