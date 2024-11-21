@@ -29,7 +29,7 @@ type URL struct {
 	Comment          Comment
 }
 
-func EmptyURL() *URL {
+func NewURL() *URL {
 	return new(URL)
 }
 
